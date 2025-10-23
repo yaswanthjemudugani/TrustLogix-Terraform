@@ -7,13 +7,25 @@ resource "aws_vpc_peering_connection" "cp_dp_peering" {
 }
 
 resource "aws_route" "cp_to_dp_route" {
-  route_table_id            = var.route_table_id_cp
+  route_table_id            = var.public_route_table_id_cp
   destination_cidr_block    = var.vpc_cidr_dp
   vpc_peering_connection_id = aws_vpc_peering_connection.cp_dp_peering.id
 }
 
 resource "aws_route" "dp_to_cp_route" {
-  route_table_id            = var.route_table_id_dp
+  route_table_id            = var.public_route_table_id_dp
+  destination_cidr_block    = var.vpc_cidr_cp
+  vpc_peering_connection_id = aws_vpc_peering_connection.cp_dp_peering.id
+}
+
+resource "aws_route" "cp_private_to_dp_route" {
+  route_table_id            = var.private_route_table_id_cp
+  destination_cidr_block    = var.vpc_cidr_dp
+  vpc_peering_connection_id = aws_vpc_peering_connection.cp_dp_peering.id
+}
+
+resource "aws_route" "dp_private_to_cp_route" {
+  route_table_id            = var.private_route_table_id_dp
   destination_cidr_block    = var.vpc_cidr_cp
   vpc_peering_connection_id = aws_vpc_peering_connection.cp_dp_peering.id
 }
