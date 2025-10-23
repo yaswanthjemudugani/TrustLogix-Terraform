@@ -6,3 +6,6 @@ variable "vpc_cidr" {
 
 variable "az" {
 }
+
+variable "admin_ip" {
+}
