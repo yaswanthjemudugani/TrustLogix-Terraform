@@ -98,3 +98,37 @@ resource "aws_route_table_association" "private_assoc" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_rt.id
 }
+
+# Security Group
+resource "aws_security_group" "vpc_sg" {
+  name        = "${var.vpc_name}-sg"
+  vpc_id      = aws_vpc.TrustLogix.id
+
+  # Allow SSH only from My IP
+  ingress {
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = [var.admin_ip]
+  }
+
+  # Allow internal communication within VPC
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-sg"
+  }
+}
