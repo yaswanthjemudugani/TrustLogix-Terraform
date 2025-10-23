@@ -15,11 +15,13 @@ module "data_plane_vpc" {
 }
 
 module "vpc_peering" {
-  source            = "./modules/vpc-peering"
-  vpc_id_cp         = module.control_plane_vpc.vpc_id
-  vpc_id_dp         = module.data_plane_vpc.vpc_id
-  route_table_id_cp = module.control_plane_vpc.public_route_table_id
-  route_table_id_dp = module.data_plane_vpc.public_route_table_id
-  vpc_cidr_cp       = "10.0.0.0/16"
-  vpc_cidr_dp       = "192.168.0.0/16"
+  source                    = "./modules/vpc-peering"
+  vpc_id_cp                 = module.control_plane_vpc.vpc_id
+  vpc_id_dp                 = module.data_plane_vpc.vpc_id
+  public_route_table_id_cp  = module.control_plane_vpc.public_route_table_id
+  public_route_table_id_dp  = module.data_plane_vpc.public_route_table_id
+  private_route_table_id_cp = module.control_plane_vpc.private_route_table_id
+  private_route_table_id_dp = module.data_plane_vpc.private_route_table_id
+  vpc_cidr_cp               = "10.0.0.0/16"
+  vpc_cidr_dp               = "192.168.0.0/16"
 }
