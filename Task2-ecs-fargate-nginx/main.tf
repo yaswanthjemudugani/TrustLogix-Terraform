@@ -1,4 +1,4 @@
-# Networking
+# VPC
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -90,6 +90,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+/*
 # Load Balancer
 resource "aws_lb" "alb" {
   name               = "${var.app_name}-alb"
@@ -119,6 +120,8 @@ resource "aws_lb_listener" "http" {
   }
 }
 
+*/
+
 # ECS Task Definition
 resource "aws_ecs_task_definition" "nginx_task" {
   family                   = "${var.app_name}-task"
@@ -143,7 +146,7 @@ resource "aws_ecs_task_definition" "nginx_task" {
   ])
 }
 
-# ECS Service
+# ECS Service with Public IP
 resource "aws_ecs_service" "nginx_service" {
   name            = "${var.app_name}-service"
   cluster         = aws_ecs_cluster.main.id
@@ -157,6 +160,9 @@ resource "aws_ecs_service" "nginx_service" {
     assign_public_ip = true
   }
 
+  depends_on = [aws_internet_gateway.igw]
+
+/*
   load_balancer {
     target_group_arn = aws_lb_target_group.tg.arn
     container_name   = "nginx"
@@ -164,4 +170,7 @@ resource "aws_ecs_service" "nginx_service" {
   }
 
   depends_on = [aws_lb_listener.http]
+
+*/
+
 }
