@@ -40,8 +40,8 @@ resource "aws_route_table_association" "public_assoc" {
 }
 
 # Security Group
-resource "aws_security_group" "alb_sg" {
-  name        = "${var.app_name}-alb-sg"
+resource "aws_security_group" "ecs_sg" {
+  name        = "${var.app_name}-ecs-sg"
   description = "Allow HTTP inbound traffic"
   vpc_id      = aws_vpc.main.id
 
@@ -60,7 +60,7 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "${var.app_name}-alb-sg" }
+  tags = { Name = "${var.app_name}-ecs-sg" }
 }
 
 # ECS Cluster
@@ -95,7 +95,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 resource "aws_lb" "alb" {
   name               = "${var.app_name}-alb"
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
+  security_groups    = [aws_security_group.ecs_sg.id]
   subnets            = aws_subnet.public[*].id
 
   tags = { Name = "${var.app_name}-alb" }
@@ -156,7 +156,7 @@ resource "aws_ecs_service" "nginx_service" {
 
   network_configuration {
     subnets         = aws_subnet.public[*].id
-    security_groups = [aws_security_group.alb_sg.id]
+    security_groups = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }
 
