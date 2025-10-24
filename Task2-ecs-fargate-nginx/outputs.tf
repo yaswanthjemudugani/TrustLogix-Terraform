@@ -23,20 +23,7 @@ output "ecs_security_group_id" {
   value       = aws_security_group.ecs_sg.id
 }
 
-# Public IP of ECS Fargate Task
-data "aws_ecs_tasks" "nginx_tasks" {
-  cluster = aws_ecs_cluster.main.id
-  service_name = aws_ecs_service.nginx_service.name
-}
-
-data "aws_ecs_task" "nginx_task_detail" {
-  task_arn = data.aws_ecs_tasks.nginx_tasks.arns[0]
-}
-
-data "aws_network_interface" "task_eni" {
-  id = data.aws_ecs_task.nginx_task_detail.attachments[0].details[0].value
-}
-
-output "ecs_task_public_ip" {
-  value       = data.aws_network_interface.task_eni.association[0].public_ip
+# Info: Fargate public IP
+output "note_task_public_ip" {
+  value       = "Check ECS Console → Cluster → Service → Task → Public IP"
 }
