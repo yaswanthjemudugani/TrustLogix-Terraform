@@ -3,15 +3,15 @@ variable "app_name" {
 }
 
 variable "vpc_cidr" {
-  default = "10.100.0.0/16"
+  default = "10.0.0.0/16"
 }
 
 variable "public_subnets" {
-  default = ["10.100.1.0/24", "10.100.2.0/24"]
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "availability_zones" {
-  default = ["ap-south-1a", "ap-south-1b"]
+  default = ["us-east-1a", "us-east-1b"]
 }
 
 variable "container_port" {
